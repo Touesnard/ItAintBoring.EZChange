@@ -33,7 +33,7 @@ namespace ItAintBoring.EZChange.Core.Actions
         {
             supportedSolutionTypes = new List<Type>();
             supportedSolutionTypes.Add(typeof(DynamicsSolution));
-            XML = @"<actions><action target=""entity/attribute/workflow/businessrule/webresource/record"" attribute="""" entity="""" plugin="""" recordid="""" errorIfMissing=""false""/></actions>";
+            XML = @"<actions><action target=""entity/attribute/workflow/businessrule/webresource/record/globaloptionset/optionsetvalue/globaloptionsetvalue"" attribute="""" entity="""" plugin="""" recordid="""" name="""" value="""" errorIfMissing=""false""/></actions>";
         }
 
         public string XML { get; set; }
@@ -112,6 +112,27 @@ namespace ItAintBoring.EZChange.Core.Actions
                         case "record":
                             ds.Service.Service.Delete(a.Attributes["entity"].Value, Guid.Parse(a.Attributes["recordid"].Value));
                             break;
+                        case "globaloptionset":
+                            ds.Service.Service.Execute(new DeleteOptionSetRequest
+                            {
+                                Name = a.Attributes["name"].Value
+                            });
+                            break;
+                        case "globaloptionsetvalue":
+                            ds.Service.Service.Execute(new DeleteOptionValueRequest
+                            {
+                                OptionSetName = a.Attributes["name"].Value,
+                                Value = int.Parse(a.Attributes["value"].Value)
+                            });
+                            break;
+                        case "optionsetvalue":
+                            ds.Service.Service.Execute(new DeleteOptionValueRequest
+                            {
+                                EntityLogicalName = a.Attributes["entity"].Value,
+                                AttributeLogicalName = a.Attributes["attribute"].Value,
+                                Value = int.Parse(a.Attributes["value"].Value)
+                            });
+                            break;
                     }
                 }
                 catch (Exception ex)
@@ -119,7 +140,6 @@ namespace ItAintBoring.EZChange.Core.Actions
                     if (!ex.Message.ToLower().Contains("could not find") ||
                         a.Attributes["errorIfMissing"].Value == "true") throw; //Ignore if the "artefact" does not exist
                 }
-                break;
             }
             ActionCompleted();
         }

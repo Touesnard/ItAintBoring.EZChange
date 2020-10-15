@@ -59,6 +59,8 @@ namespace ItAintBoring.EZChange.Core.Actions
         {
             ActionStarted();
             DynamicsSolution ds = (DynamicsSolution)solution;
+            ds.Service.PublishAll();
+
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(XML);
             var actions = doc.GetElementsByTagName("action");
@@ -137,8 +139,17 @@ namespace ItAintBoring.EZChange.Core.Actions
                 }
                 catch (Exception ex)
                 {
-                    if (!ex.Message.ToLower().Contains("could not find") ||
-                        a.Attributes["errorIfMissing"].Value == "true") throw; //Ignore if the "artefact" does not exist
+                    if(ex.Message.ToLower().Contains("could not find") || ex.Message.ToLower().Contains("does not exist"))
+                    {
+                        if(a.Attributes["errorIfMissing"] == null || a.Attributes["errorIfMissing"].Value == "true")
+                        {
+                            throw;
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
             ActionCompleted();

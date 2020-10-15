@@ -96,9 +96,10 @@ namespace ItAintBoring.EZChange.Core.Actions
         public override void DoAction(BaseSolution solution)
         {
             ActionStarted();
+            DynamicsSolution ds = (DynamicsSolution)solution;
+            ds.Service.PublishAll();
 
             var exportAction = Solution.Package.FindAction(ExportActionId);
-            DynamicsSolution ds = (DynamicsSolution)solution;
             string json = ds.LoadActionData(this, ds.GetActionFileName(exportAction, null));
             if (json != null)
             {

@@ -194,7 +194,10 @@ namespace ItAintBoring.EZChange.Core.Dynamics
         public void LogPackageDeployment(string packageName)
         {
             UpdateTrackerResource(GetTrackerResource() + "#" + packageName + "#,");
-            PublishAll();
+
+            //PublishXmlRequest publishWebResource = new PublishXmlRequest { ParameterXml = $"<importexportxml><webresources><webresource>{trackerResourceId}</webresource></webresources></importexportxml>" };
+            //Service.Execute(publishWebResource);
+            //PublishAll();
         }
 
         public void SetMessageStepStatus(string stepName, bool activate)
@@ -320,7 +323,7 @@ namespace ItAintBoring.EZChange.Core.Dynamics
                 throw new Exception("An error has occured while exporting the solution: " + asyncJobError);
             }
             */
-            PublishAll();
+            //PublishAll();
         }
 
         public void PublishAll()
